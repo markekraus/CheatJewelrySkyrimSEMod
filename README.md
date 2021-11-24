@@ -36,7 +36,7 @@ Download and install with Vortex and the FOMOD installer will take care of the r
 ### Manual
 
 * Extract the 7z file using 7-Zip.
-* Copy the extracted `MarkekrausCheatRings.esl` file to the `data` folder under your Skyrim: Special Edition installation folder.
+* Copy the extracted `MarkekrausCheatJewelry.esl` file to the `data` folder under your Skyrim: Special Edition installation folder.
 * Copy the extracted `scripts` folder to the `data` folder under your Skyrim: Special Edition installation folder.
 * Enable the plugin using whatever method you usually use.
 

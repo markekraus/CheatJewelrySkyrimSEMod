@@ -1,23 +1,26 @@
-# Cheat Rings
+# Cheat Jewelry
 
-![Cheat Rings](logo.png)
+![Cheat Jewelry](logo.png)
 
 A Skyrim Special Edition mod By Mark E. Kraus.
 
 My mods:
 
 * [Cheat Powers](https://www.nexusmods.com/skyrimspecialedition/mods/58892)
+* [Cheat Jewelry](tbd)
 * [Exit Combat Power](https://www.nexusmods.com/skyrimspecialedition/mods/58651)
 
-## About Cheat Rings
+## About Cheat Jewelry
 
-This mod adds several rings that work as shortcuts to common console command cheats.
+This mod adds several amulets, circlets, and rings that work as shortcuts to common console command cheats.
 
-## Rings
+## Jewelry
 
-* Cheat: Add 10,000 Septims - Adds 10,000 Septims (gold) to the player.
+Each of the following has their own amulet, circlet, and ring.
+
 * Cheat: Toggle AI Detection - Toggles NPCs' ability to detect the player.
 * Cheat: Toggle Collision - Toggles collision for the player. This allows the player to walk through walls, doors, floors, etc.
+* Cheat: Toggle Free Camera - Toggles Free Camera mode. This freezes NPCs and the environment allowing the player camera to move freely to take screenshots or look around.
 * Cheat: Toggle God Mode - Toggles God Mode on or off.
 
 ## Installation
@@ -39,9 +42,11 @@ Download and install with Vortex and the FOMOD installer will take care of the r
 
 ## User Guide
 
-The cheat rings will be automatically added to your inventory. Items > Armor. Equip the desired ring and the cheat will be applied.
+The cheat jewelry will be automatically added to your inventory. Items > Armor. Equip the desired amulets, circlets, and/or rings and the cheat(s) will be applied.
 
-If you accidentally sell, drop, or otherwise lose the rings, you can re-add them to your inventory using console commands.
+Wearing 2 of the same effect (e.g. wearing both the God Mode amulet and ring) will result in strange behavior. Each slot should be a unique cheat.
+
+If you accidentally sell, drop, or otherwise lose the jewelry, you can re-add them to your inventory using console commands.
 
 ## Compatibility
 

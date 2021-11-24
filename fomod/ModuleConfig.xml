@@ -1,16 +1,16 @@
 <!-- Created with build.ps1 by Mark E. Kraus --> 
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://qconsulting.ca/fo3/ModConfig5.0.xsd"> 
-    <moduleName>Cheat Rings</moduleName> 
+    <moduleName>Cheat Jewelry</moduleName> 
     <installSteps order="Explicit"> 
         <installStep name="Install"> 
             <optionalFileGroups order="Explicit"> 
                 <group name="Main" type="SelectExactlyOne"> 
                     <plugins order="Explicit">
-                        <plugin name="MarkekrausCheatRings.esl (default)">
-                            <description>MarkekrausCheatRings.esl (default). Adds several rings that work as shortcuts to common console command cheats.</description>
+                        <plugin name="MarkekrausCheatJewelry.esl (default)">
+                            <description>MarkekrausCheatJewelry.esl (default). Adds several amulets, circlets, and rings that work as shortcuts to common console command cheats.</description>
                             <image path="logo.png" />
                             <files>
-                                <file source="MarkekrausCheatRings.esl" destination="MarkekrausCheatRings.esl" priority="0" />
+                                <file source="MarkekrausCheatJewelry.esl" destination="MarkekrausCheatJewelry.esl" priority="0" />
                             </files>
                             <typeDescriptor>
                                 <type name="Optional"/>

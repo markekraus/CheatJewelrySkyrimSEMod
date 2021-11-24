@@ -6,8 +6,8 @@ A Skyrim Special Edition mod By Mark E. Kraus.
 
 My mods:
 
+* [Cheat Jewelry](https://www.nexusmods.com/skyrimspecialedition/mods/58973)
 * [Cheat Powers](https://www.nexusmods.com/skyrimspecialedition/mods/58892)
-* [Cheat Jewelry](tbd)
 * [Exit Combat Power](https://www.nexusmods.com/skyrimspecialedition/mods/58651)
 
 ## About Cheat Jewelry

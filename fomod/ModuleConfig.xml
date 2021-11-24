@@ -1,0 +1,41 @@
+<!-- Created with build.ps1 by Mark E. Kraus --> 
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://qconsulting.ca/fo3/ModConfig5.0.xsd"> 
+    <moduleName>Cheat Rings</moduleName> 
+    <installSteps order="Explicit"> 
+        <installStep name="Install"> 
+            <optionalFileGroups order="Explicit"> 
+                <group name="Main" type="SelectExactlyOne"> 
+                    <plugins order="Explicit">
+                        <plugin name="MarkekrausCheatRings.esl (default)">
+                            <description>MarkekrausCheatRings.esl (default). Adds several rings that work as shortcuts to common console command cheats.</description>
+                            <image path="logo.png" />
+                            <files>
+                                <file source="MarkekrausCheatRings.esl" destination="MarkekrausCheatRings.esl" priority="0" />
+                            </files>
+                            <typeDescriptor>
+                                <type name="Optional"/>
+                            </typeDescriptor>
+                        </plugin>
+                    </plugins> 
+                </group> 
+                <group name="Scripts" type="SelectExactlyOne"> 
+                    <plugins order="Explicit"> 
+                        <plugin name="Install Scripts"> 
+                            <description>Installs the compiled scripts and their sources.</description>
+                            <image path="logo.png" />
+                            <files>
+                                <file source="scripts\MarkekrausRingCheatToggle.pex" destination="scripts\MarkekrausRingCheatToggle.pex" priority="0" />
+                                <file source="source\scripts\MarkekrausRingCheatToggle.psc" destination="source\scripts\MarkekrausRingCheatToggle.psc" priority="0" />
+                                <file source="scripts\MarkekrausAddCheatRingsScript.pex" destination="scripts\MarkekrausAddCheatRingsScript.pex" priority="0" />
+                                <file source="source\scripts\MarkekrausAddCheatRingsScript.psc" destination="source\scripts\MarkekrausAddCheatRingsScript.psc" priority="0" />
+                            </files>
+                            <typeDescriptor> 
+                                <type name="Optional"/> 
+                            </typeDescriptor> 
+                        </plugin> 
+                    </plugins> 
+                </group> 
+            </optionalFileGroups> 
+        </installStep> 
+    </installSteps> 
+</config>

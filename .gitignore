@@ -1,3 +1,10 @@
 *.7z
 README.txt
 README.bbcode
+*.bsascript.txt
+*.bsafiles.txt
+*.log
+meta.ini
+*.hash
+*.fuz
+*.zip

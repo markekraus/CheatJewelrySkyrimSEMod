@@ -1,22 +1,14 @@
 {
-  "SkyrimSE": {
-    "DataPath": "D:\\Steam\\steamapps\\common\\Skyrim Special Edition\\Data"
-  },
+  "$schema": "http://mekschemas.netlify.app/modpackager/v2/",
+  "UnfuzerPath": "D:\\Steam\\steamapps\\common\\Skyrim Special Edition\\Tools\\unfuzer",
   "ModInfo": {
     "Name": "Cheat Jewelry",
-    "Version": "1.0.0",
+    "Version": "2.0.0",
     "Author": "Mark E. Kraus",
     "Description": "Adds several amulets, circlets, and rings that work as shortcuts to common console command cheats.",
     "Website": "https://www.nexusmods.com/skyrimspecialedition/mods/58973",
     "Category": "Cheats and God items",
     "Logo": "logo.png"
   },
-  "Plugins": [
-    "MarkekrausCheatJewelry.esl"
-  ],
-  "Scripts": [
-    "MarkekrausRingCheatToggle",
-    "MarkekrausAddCheatRingsScript"
-  ],
-  "PackageName": "MarkekrausCheatJewelrySkyrimSE.7z"
+  "Plugin": "MarkekrausCheatJewelry.esp"
 }

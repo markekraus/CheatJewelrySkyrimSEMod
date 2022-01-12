@@ -1,19 +1,10 @@
 <#
 .SYNOPSIS
-    Pulls in assets from the skyrim Data Folder to create the 7z Skyrim SE mod package.
+    Creates FOMOD installer and Generates BBCODE version of Readme
 .DESCRIPTION
-    Pulls in assets from the skyrim Data Folder to create the 7z Skyrim SE mod package.
+    Creates FOMOD installer and Generates BBCODE version of Readme
 .PARAMETER ConfigFile
     The path to the buildConfig.json used to build this mod
-.PARAMETER SkipReadme
-    Skips generating the txt and bbcode readme from MD.
-.EXAMPLE
-    PS C:\> <example usage>
-    Explanation of what the example does
-.INPUTS
-    None
-.OUTPUTS
-    None
 .NOTES
     Copyright 2021 Mark E. Kraus
 #>
@@ -32,16 +23,11 @@ param (
         else {
             Join-Path $pwd.Path "buildConfig.json"
         }
-    ),
-    [Parameter()]
-    [switch]
-    $SkipReadme
+    )
 )
 $StartTime = [datetime]::UtcNow
 Write-Host ("Build started {0} UTC" -f $StartTime)
 Write-Host " "
-
-$7zFiles = [System.Collections.Generic.List[string]]::New()
 
 $BasePath = Split-Path $ConfigFile
 Push-Location $BasePath
@@ -52,30 +38,47 @@ $FomodModuleConfigFile = Join-Path $FomodBasePath "ModuleConfig.xml"
 
 $Config = Get-Content -Path $ConfigFile | ConvertFrom-Json -Depth 10
 $ModInfo = $Config.ModInfo
+if([string]::IsNullOrWhiteSpace($Config.'$schema')) {
+    Write-Error "config file is missing '`$schema'"
+    exit 1
+}
+$Schema = (Invoke-WebRequest $Config.'$schema').Content
+$SchemaIsValid = Get-Content -Path $ConfigFile -Raw | Test-Json -Schema $Schema
+if(!$SchemaIsValid) {
+    Write-Error "Invalid JSON Schema."
+    exit 1
+}
 
-$SkyrimDataPath = $Config.SkyrimSE.DataPath
-$SkyrimScriptPath = Join-Path $SkyrimDataPath 'scripts'
-$SkyrimScriptSourcePath = Join-Path $SkyrimDataPath -ChildPath 'source' -AdditionalChildPath 'scripts'
 
-$OutputScriptPath = Join-Path $BasePath 'scripts'
-$OutputScriptSourcePath = Join-Path $BasePath -ChildPath 'source' -AdditionalChildPath 'scripts'
+$FuzExtractorPath = Join-Path $Config.UnfuzerPath "Fuz_extractor.exe"
+$XWmaEncodePath = Join-Path $Config.UnfuzerPath "xWMAEncode.exe"
+$XWmaEncodeCmd = Get-Command $XWmaEncodePath
+
+$Plugin = $Config.Plugin
+$PluginPath = Join-Path $BasePath $Plugin
+$BsaName = $Plugin -replace '\.esp$', '.bsa'
+$ZipName = $Plugin -replace '\.esp$', '.zip'
+
+$VoiceBasePath = Join-Path $BasePath 'Sound' 'Voice',$Plugin
 
 Write-Host @"
 
 BasePath:               $BasePath
-OutputScriptPath:       $OutputScriptPath
-OutputScriptSourcePath: $OutputScriptSourcePath
 FomodBasePath:          $FomodBasePath
 FomodInfoFile:          $FomodInfoFile
 FomodModuleConfigFile:  $FomodModuleConfigFile
-SkyrimDataPath:         $SkyrimDataPath
-SkyrimScriptPath:       $SkyrimScriptPath
-SkyrimScriptSourcePath: $SkyrimScriptSourcePath
-
+VoiceBasePath:          $VoiceBasePath
+FuzExtractorPath:       $FuzExtractorPath
+XWmaEncodePath:         $XWmaEncodePath
+PluginPath:             $PluginPath
+BsaName:                $BsaName
+ZipName:                $ZipName
 "@
 
-$null = New-Item -ItemType Directory -Path $OutputScriptPath -Force
-$null = New-Item -ItemType Directory -Path $OutputScriptSourcePath -Force
+if (Test-Path $ZipName) {
+    Write-Host "Deleting $ZipName"
+    Remove-Item -Force $ZipName
+}
 
 $PluginXmlTemplate = @'
 
@@ -84,6 +87,7 @@ $PluginXmlTemplate = @'
                             <image path="{2}" />
                             <files>
                                 <file source="{3}" destination="{3}" priority="0" />
+                                <file source="{4}" destination="{4}" priority="0" />
                             </files>
                             <typeDescriptor>
                                 <type name="Optional"/>
@@ -92,60 +96,27 @@ $PluginXmlTemplate = @'
 '@
 
 $PluginPartXml = ""
-$First = $true
-foreach ($Plugin in $Config.Plugins) {
-    $PluginPath = Join-Path $SkyrimDataPath $Plugin
-    if(Test-Path -Path $PluginPath){
-        $7zFiles.Add($Plugin)
-        Write-Host "Copying $PluginPath"
-        Copy-Item -Path $PluginPath -Destination $BasePath -Force
-        if ($First) {
-            $PluginName = $Plugin + " (default)"
-        }
-        else {
-            $PluginName = $Plugin
-        }
-        $PluginPartXml = $PluginPartXml + ($PluginXmlTemplate -f @(
-            $PluginName
-            $PluginName + ". " + $ModInfo.Description
-            $ModInfo.Logo
-            $Plugin
-        ))
-    }
-}
 
-$ScriptXmlTemplate = @'
 
-                                <file source="scripts\{0}" destination="scripts\{0}" priority="0" />
-'@
+$PluginPartXml = $PluginPartXml + ($PluginXmlTemplate -f @(
+    $Plugin
+    $ModInfo.Description
+    $ModInfo.Logo
+    $Plugin
+    $BsaName
+))
+
+
 $ScriptSourceXmlTemplate = @'
 
-                                <file source="source\scripts\{0}" destination="source\scripts\{0}" priority="0" />
+                                <file source="{0}" destination="{0}" priority="0" />
 '@
 $ScriptsXmlPart=""
-foreach ($papyrusScript in $Config.Scripts) {
-    $pexFile = $papyrusScript + ".pex"
-    $pscFile = $papyrusScript + ".psc"
-    $PapyrusScriptPath = Join-Path $SkyrimScriptPath $pexFile
-    $PapyrusScriptSourcePath = Join-Path $SkyrimScriptSourcePath $pscFile
-    if(Test-Path -Path $PapyrusScriptPath){
-        $7zFiles.Add("scripts\" + $pexFile)
-        Write-Host "Copying $PapyrusScriptPath"
-        Copy-Item -Path $PapyrusScriptPath -Destination $OutputScriptPath -Force
-        $ScriptsXmlPart += $ScriptXmlTemplate -f $pexFile
-    }
-    else {
-        Write-Error "Unable to find script '$PapyrusScriptPath'"
-    }
-    if(Test-Path -Path $PapyrusScriptSourcePath){
-        $7zFiles.Add("source\scripts\" + $pscFile)
-        Write-Host "Copying $PapyrusScriptSourcePath"
-        Copy-Item -Path $PapyrusScriptSourcePath -Destination $OutputScriptSourcePath -Force
-        $ScriptsXmlPart += $ScriptSourceXmlTemplate -f $pscFile
-    }
-    else {
-        Write-Warning "Unable to find script source '$PapyrusScriptSourcePath'"
-    }
+
+$PapyrusScripts = Get-ChildItem -Recurse *.psc
+foreach ($papyrusScript in $PapyrusScripts) {
+    $relPath = [Io.Path]::GetRelativePath($BasePath, $papyrusScript.FullName)
+    $ScriptsXmlPart += $ScriptSourceXmlTemplate -f $relPath
 }
 
 $InfoXml = @'
@@ -184,10 +155,18 @@ $ModuleConfigXML = @'
                     <plugins order="Explicit">{1}
                     </plugins> 
                 </group> 
-                <group name="Scripts" type="SelectExactlyOne"> 
+                <group name="Install Script Sources?" type="SelectExactlyOne"> 
                     <plugins order="Explicit"> 
-                        <plugin name="Install Scripts"> 
-                            <description>Installs the compiled scripts and their sources.</description>
+                        <plugin name="No (Default)"> 
+                            <description>Skips installing script sources.</description>
+                            <image path="{2}" />
+                            <files></files>
+                        <typeDescriptor> 
+                            <type name="Optional"/> 
+                        </typeDescriptor> 
+                        </plugin>
+                        <plugin name="Yes (For Mod Developers)"> 
+                            <description>Installs script sources.</description>
                             <image path="{2}" />
                             <files>{3}
                             </files>
@@ -208,63 +187,83 @@ $ModuleConfigXML = @'
     $ScriptsXmlPart
 )
 
+Write-Host @'
+Converting Fuzzing Voice and Lip Files...
+
+'@
+if(Test-Path $VoiceBasePath) {
+    Push-Location $VoiceBasePath
+    foreach ($WavFile in (Get-ChildItem -Recurse -Filter '*.wav')) {
+        Push-Location $WavFile.Directory
+        Write-Host ([Io.Path]::GetRelativePath($VoiceBasePath, $WavFile))
+        $XWmaFile = $WavFile.BaseName + '.xwm'
+        $LipFile = $WavFile.BaseName + '.lip'
+        $FuzFile = $WavFile.BaseName + '.fuz'
+        $HashFile = $WavFile.BaseName + '.hash'
+        $currentHash = (Get-FileHash $WavFile -Algorithm SHA256).Hash
+        if ((Test-Path $HashFile) -and (Test-Path $FuzFile)) {
+            $oldHash = Get-Content $HashFile -TotalCount 1
+            if ($currentHash -eq $oldHash) {
+                Write-Host "No change. Skipping..."
+                Pop-Location
+                continue
+            }
+        }
+        else {
+            $currentHash | Set-Content -Path $HashFile -Encoding utf8BOM -NoNewline
+        }
+        & $XWmaEncodeCmd $WavFile $XWmaFile
+        if (Test-Path $LipFile) {
+            & $FuzExtractorPath -i $FuzFile $XWmaFile /l
+            # Remove-Item $LipFile -Force
+        } else {
+            & $FuzExtractorPath -i $FuzFile $XWmaFile
+        }
+        # Remove-Item $WavFile -Force
+        Remove-Item $XWmaFile -Force
+        Pop-Location
+    }
+    Pop-Location
+}
+
 $ModuleConfigXML | Set-Content -Encoding utf8NoBOM -Path $FomodModuleConfigFile
+
+# Get-ChildItem -Recurse $VoiceBasePath
 
 $bbcode = [System.Text.StringBuilder]::New()
 $inList = $false
-if(!$SkipReadme){
-    Copy-Item ".\README.md" "README.txt"
-    $7zFiles.Add("README.txt")
-    foreach ($Line in (Get-Content "README.md")) {
-        if ($Line -match '^#[^#]') {
-            $Line = $Line -replace '^# ','[size=6]'
-            $Line = $Line + '[/size]'
-        }
-        elseif ($Line -match '^##[^#]') {
-            $Line = $Line -replace '^## ','[size=5]'
-            $Line = $Line + '[/size]'
-        }
-        elseif ($Line -match '^#') {
-            $Line = $Line -replace '^#* ','[size=4]'
-            $Line = $Line + '[/size]'
-        }
-        if ($inList -and $Line -notmatch '^\* ') {
-            $inList = $false
-            $null =  $bbcode.AppendLine('[/list]')
-        }
-        if (!$inList -and $Line -match '^\* ') {
-            $inList = $true
-            $null =  $bbcode.AppendLine('[list]')
-        }
-        if($inList -and $Line -match '^\* ') {
-            $Line = $Line -replace '^\* ', '[*]'
-        }
-        $Line = $Line -replace '!\[[^)]*\)'
-        $Line = $Line -replace '\[([^\]]*)\]\(([^)]*)\)', '[url=$2]$1[/url]'
-        $Line = $Line -replace '`([^`]*)`', '[font=Courier New]$1[/font]'
-        $null = $bbcode.AppendLine($Line)
+
+Copy-Item ".\README.md" "README.txt"
+foreach ($Line in (Get-Content "README.md")) {
+    if ($Line -match '^#[^#]') {
+        $Line = $Line -replace '^# ','[size=6]'
+        $Line = $Line + '[/size]'
     }
-    $bbcode.ToString() | Set-Content -Encoding utf8NoBOM README.bbcode -NoNewline
+    elseif ($Line -match '^##[^#]') {
+        $Line = $Line -replace '^## ','[size=5]'
+        $Line = $Line + '[/size]'
+    }
+    elseif ($Line -match '^#') {
+        $Line = $Line -replace '^#* ','[size=4]'
+        $Line = $Line + '[/size]'
+    }
+    if ($inList -and $Line -notmatch '^\* ') {
+        $inList = $false
+        $null =  $bbcode.AppendLine('[/list]')
+    }
+    if (!$inList -and $Line -match '^\* ') {
+        $inList = $true
+        $null =  $bbcode.AppendLine('[list]')
+    }
+    if($inList -and $Line -match '^\* ') {
+        $Line = $Line -replace '^\* ', '[*]'
+    }
+    $Line = $Line -replace '!\[[^)]*\)'
+    $Line = $Line -replace '\[([^\]]*)\]\(([^)]*)\)', '[url=$2]$1[/url]'
+    $Line = $Line -replace '`([^`]*)`', '[font=Courier New]$1[/font]'
+    $null = $bbcode.AppendLine($Line)
 }
-
-if(Test-Path 'LICENSE'){
-    $7zFiles.Add('LICENSE')
-}
-
-if(Test-Path $ModInfo.Logo){
-    $7zFiles.Add($ModInfo.logo)
-}
-$7zFiles.Add("fomod\info.xml")
-$7zFiles.Add("fomod\ModuleConfig.xml")
-
-Write-Host ""
-Write-Host "Archive files:"
-foreach ($file in $7zFiles) {
-    Write-Host $file
-}
-
-Remove-Item -Path $Config.PackageName -Force -ErrorAction SilentlyContinue
-7za.exe a -t7z $Config.PackageName $7zFiles
+$bbcode.ToString() | Set-Content -Encoding utf8NoBOM README.bbcode -NoNewline
 
 Pop-Location
 $EndTime = [datetime]::UtcNow

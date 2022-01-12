@@ -6,11 +6,12 @@
             <optionalFileGroups order="Explicit"> 
                 <group name="Main" type="SelectExactlyOne"> 
                     <plugins order="Explicit">
-                        <plugin name="MarkekrausCheatJewelry.esl (default)">
-                            <description>MarkekrausCheatJewelry.esl (default). Adds several amulets, circlets, and rings that work as shortcuts to common console command cheats.</description>
+                        <plugin name="MarkekrausCheatJewelry.esp">
+                            <description>Adds several amulets, circlets, and rings that work as shortcuts to common console command cheats.</description>
                             <image path="logo.png" />
                             <files>
-                                <file source="MarkekrausCheatJewelry.esl" destination="MarkekrausCheatJewelry.esl" priority="0" />
+                                <file source="MarkekrausCheatJewelry.esp" destination="MarkekrausCheatJewelry.esp" priority="0" />
+                                <file source="MarkekrausCheatJewelry.bsa" destination="MarkekrausCheatJewelry.bsa" priority="0" />
                             </files>
                             <typeDescriptor>
                                 <type name="Optional"/>
@@ -18,16 +19,22 @@
                         </plugin>
                     </plugins> 
                 </group> 
-                <group name="Scripts" type="SelectExactlyOne"> 
+                <group name="Install Script Sources?" type="SelectExactlyOne"> 
                     <plugins order="Explicit"> 
-                        <plugin name="Install Scripts"> 
-                            <description>Installs the compiled scripts and their sources.</description>
+                        <plugin name="No (Default)"> 
+                            <description>Skips installing script sources.</description>
+                            <image path="logo.png" />
+                            <files></files>
+                        <typeDescriptor> 
+                            <type name="Optional"/> 
+                        </typeDescriptor> 
+                        </plugin>
+                        <plugin name="Yes (For Mod Developers)"> 
+                            <description>Installs script sources.</description>
                             <image path="logo.png" />
                             <files>
-                                <file source="scripts\MarkekrausRingCheatToggle.pex" destination="scripts\MarkekrausRingCheatToggle.pex" priority="0" />
-                                <file source="source\scripts\MarkekrausRingCheatToggle.psc" destination="source\scripts\MarkekrausRingCheatToggle.psc" priority="0" />
-                                <file source="scripts\MarkekrausAddCheatRingsScript.pex" destination="scripts\MarkekrausAddCheatRingsScript.pex" priority="0" />
-                                <file source="source\scripts\MarkekrausAddCheatRingsScript.psc" destination="source\scripts\MarkekrausAddCheatRingsScript.psc" priority="0" />
+                                <file source="source\scripts\MEKCHJCheatToggle.psc" destination="source\scripts\MEKCHJCheatToggle.psc" priority="0" />
+                                <file source="source\scripts\MEKCHJModInitializationScript.psc" destination="source\scripts\MEKCHJModInitializationScript.psc" priority="0" />
                             </files>
                             <typeDescriptor> 
                                 <type name="Optional"/> 

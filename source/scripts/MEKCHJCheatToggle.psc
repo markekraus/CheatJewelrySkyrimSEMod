@@ -1,8 +1,8 @@
-Scriptname MarkekrausRingCheatToggle extends ActiveMagicEffect  
-{Copyright 2021 Mark E. Krais
+Scriptname MEKCHJCheatToggle extends ActiveMagicEffect  
+{Copyright 2022 Mark E. Kraus
 Toggles various cheats when rings are equiped and unequiped}
 
-String Property Cheat  Auto  
+String Property Cheat  Auto
 
 Event OnEffectStart(Actor akTarget, Actor akCaster)
     If (Cheat == "collisions")

@@ -1,11 +1,10 @@
-{
-    // created by vscode papyrus-lang papyrus.skyrimSpecialEdition.generateProject
+{// created by vscode papyrus-lang papyrus.skyrimSpecialEdition.generateProject
     "version": "2.0.0",
     "tasks": [
       {
         "label": "Compile Papyrus Script",
         "type": "process",
-        "command": "D:\\Modding\\MO2\\Game Root\\Papyrus Compiler\\PapyrusCompiler.exe",
+        "command": "..\\..\\Game Root\\Papyrus Compiler\\PapyrusCompiler.exe",
         "problemMatcher":"$PapyrusCompiler",
         "args": [
           "${relativeFile}",
@@ -18,7 +17,7 @@
       {
         "type": "pyro",
         "projectFile": "MarkekrausCheatJewelry.ppj",
-        "gamePath": "D:\\Modding\\MO2\\Game Root",
+        "gamePath": "..\\..\\Game Root",
         "problemMatcher": [
           "$PapyrusCompiler"
         ],
@@ -34,6 +33,6 @@
         "type": "shell",
         "command": "./build.ps1",
         "group": "build"
-    }
+      }
     ]
 }

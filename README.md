@@ -27,6 +27,10 @@ Each of the following has their own amulet, circlet, and ring.
 * Cheat: Toggle Free Camera - Toggles Free Camera mode. This freezes NPCs and the environment allowing the player camera to move freely to take screenshots or look around.
 * Cheat: Toggle God Mode - Toggles God Mode on or off.
 
+## Powers
+
+This mod also adds a "Cheat: Add Cheat Jewelry" power to your spells list. This will add any missing cheat jewelry to your inventory. It will not add duplicates of existing cheat jewelry already in your inventory.
+
 ## Manual Upgrading from 1.0.0 to 2.0.0 or later
 
 If you manually installed version 1.0.0 of this mod (this does not apply to Mod Organizer 2, Vortex, or other mod managers), before updating to 2.0.0, you will need to do the following:
@@ -69,7 +73,7 @@ The cheat jewelry will be automatically added to your inventory. Items > Armor. 
 
 Wearing 2 of the same effect (e.g. wearing both the God Mode amulet and ring) will result in strange behavior. Each slot should be a unique cheat.
 
-If you accidentally sell, drop, or otherwise lose the jewelry, you can re-add them to your inventory using console commands.
+If you accidentally sell, drop, or otherwise lose the jewelry, you can re-add them to your inventory using the "Cheat: Add Cheat Jewelry" power.
 
 ## Compatibility
 

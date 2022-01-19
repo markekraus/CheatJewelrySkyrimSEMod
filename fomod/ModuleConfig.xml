@@ -33,6 +33,7 @@
                             <description>Installs script sources.</description>
                             <image path="logo.png" />
                             <files>
+                                <file source="source\scripts\MEKCHJAddCheatJewelryScript.psc" destination="source\scripts\MEKCHJAddCheatJewelryScript.psc" priority="0" />
                                 <file source="source\scripts\MEKCHJCheatToggle.psc" destination="source\scripts\MEKCHJCheatToggle.psc" priority="0" />
                                 <file source="source\scripts\MEKCHJModInitializationScript.psc" destination="source\scripts\MEKCHJModInitializationScript.psc" priority="0" />
                             </files>

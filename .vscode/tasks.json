@@ -5,11 +5,11 @@
       {
         "label": "Compile Papyrus Script",
         "type": "process",
-        "command": "D:\\Steam\\steamapps\\common\\Skyrim Special Edition\\Papyrus Compiler\\PapyrusCompiler.exe",
+        "command": "D:\\Modding\\MO2\\Game Root\\Papyrus Compiler\\PapyrusCompiler.exe",
         "problemMatcher":"$PapyrusCompiler",
         "args": [
           "${relativeFile}",
-          "-i=Source\\Scripts;D:\\Steam\\steamapps\\common\\Skyrim Special Edition\\Data\\Source\\Scripts",
+          "-i=Source\\Scripts;..\\Creation Kit Scripts\\Source\\Scripts;..\\ConsoleUtilSSE\\Source\\Scripts",
           "-o=Scripts",
           "-f=TESV_Papyrus_Flags.flg"
         ],
@@ -18,7 +18,7 @@
       {
         "type": "pyro",
         "projectFile": "MarkekrausCheatJewelry.ppj",
-        "gamePath": "D:\\Steam\\steamapps\\common\\Skyrim Special Edition",
+        "gamePath": "D:\\Modding\\MO2\\Game Root",
         "problemMatcher": [
           "$PapyrusCompiler"
         ],

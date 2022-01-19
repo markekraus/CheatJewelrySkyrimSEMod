@@ -3,7 +3,12 @@ Scriptname MEKCHJModInitializationScript extends ReferenceAlias
 Adds cheat powers to the player on the next game load.}
 
 FormList Property MEKCHPAllJewelry  Auto
+{FormList of Items to add to the player}
+
+FormList Property MEKCHPAllPowers  Auto
 {Array of powers to add to the player}
+
+Bool Property Initialized = false Auto
 
 string LogPrefix = "[MEKCHJ] "
 
@@ -25,6 +30,15 @@ EndFunction
 
 Function Maintenance()
     TraceLog("=================Maintenance Start=================")
+    If (!Initialized)
+        Initialized = true
+        AddCheatJewelry()
+        AddPowers()
+    EndIf
+    TraceLog("=================Maintenance End===================")
+EndFunction
+
+Function AddCheatJewelry()
     Actor player = Game.GetPlayer()
     int index = 0
     While (index < MEKCHPAllJewelry.GetSize())
@@ -35,5 +49,16 @@ Function Maintenance()
         EndIf
         index += 1
     EndWhile
-    TraceLog("=================Maintenance End===================")
+EndFunction
+
+Function AddPowers()
+    Actor player = Game.GetPlayer()
+    int index = 0
+   While (index < MEKCHPAllPowers.GetSize())
+       Spell curSpell = MEKCHPAllPowers.GetAt(index) as Spell
+       If (!Player.HasSpell(curSpell))
+           Player.AddSpell(curSpell)
+       EndIf
+       index += 1
+   EndWhile
 EndFunction

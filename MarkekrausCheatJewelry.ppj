@@ -16,8 +16,8 @@
     </Variables>
     <Imports>
         <Import>.\Source\Scripts</Import>
-        <Import>D:\Steam\steamapps\common\Skyrim Special Edition\Data\Source\Scripts</Import>
-        <Import>D:\Steam\steamapps\common\Skyrim Special Edition\Data\Scripts\Source</Import>
+        <Import>..\Creation Kit Scripts\Source\Scripts</Import>
+        <Import>..\ConsoleUtilSSE\Source\Scripts</Import>
     </Imports>
     <Folders>
         <Folder>.\Source\Scripts</Folder>
